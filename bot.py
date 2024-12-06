@@ -1,11 +1,9 @@
 import logging
-import traceback
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 from config import API_TOKEN
 from keyboards.default.def_buttons import welcome_buttons
-from aiogram.utils.markdown import escape_md
 
 logging.basicConfig(level=logging.INFO)
 
@@ -38,9 +36,8 @@ async def user_shared_func(message: types.Message):
     try:
         user_shared = message.user_shared
         if user_shared:
-            await message.reply(f"The ID is: {user_shared.user_id}")
-    except Exception as e:
-        print(e)
+            await message.reply(f"The ID is: `{user_shared.user_id}`", parse_mode="Markdown")
+    except:
         print("Error")
 
 
@@ -52,13 +49,16 @@ async def chat_shared_func(message: types.Message):
         chat_shared = message.chat_shared
         chat_id = chat_shared._values.get("chat_id")
         if chat_id:
-            await message.answer(f"The ID is: {chat_id}")
+            await message.answer(f"The ID is: `{chat_id}`", parse_mode="Markdown")
         else:
             print("chat_id mavjud emas.")
-    except Exception as e:
-        print(e)
+    except:
         print("chat_id mavjud emas.")
 
+@dp.message_handler(commands=['me'])
+async def me_func(message: types.Message):
+    me_id = message.from_user.id
+    await message.reply(f"The ID is: `{me_id}`", parse_mode="Markdown")
 
 
 if __name__ == '__main__':
